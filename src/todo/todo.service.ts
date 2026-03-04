@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Todo } from './entities/todo.entity';
 import { CreateTodoInput } from './dto/create-todo.input';
 import { UpdateTodoInput } from './dto/update-todo.input';
 
 @Injectable()
 export class TodoService {
-  create(createTodoInput: CreateTodoInput) {
-    return 'This action adds a new todo';
+  private todos: Todo[] = [];
+  private idCounter = 1;
+
+  findAll(): Todo[] {
+    return this.todos;
   }
 
-  findAll() {
-    return `This action returns all todo`;
+  findOne(id: number): Todo {
+    const todo = this.todos.find((t) => t.id === id);
+    if (!todo) {
+      throw new NotFoundException(`Todo with id ${id} not found`);
+    }
+    return todo;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} todo`;
+  create(input: CreateTodoInput): Todo {
+    const todo: Todo = {
+      id: this.idCounter++,
+      title: input.title,
+      description: input.description,
+      completed: false,
+    };
+    this.todos.push(todo);
+    return todo;
   }
 
-  update(id: number, updateTodoInput: UpdateTodoInput) {
-    return `This action updates a #${id} todo`;
+  update(input: UpdateTodoInput): Todo {
+    const todo = this.findOne(input.id);
+
+    if (input.title !== undefined) todo.title = input.title;
+    if (input.description !== undefined) todo.description = input.description;
+    if (input.completed !== undefined) todo.completed = input.completed;
+
+    return todo;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} todo`;
+  remove(id: number): boolean {
+    const index = this.todos.findIndex((t) => t.id === id);
+    if (index === -1) return false;
+    this.todos.splice(index, 1);
+    return true;
   }
 }

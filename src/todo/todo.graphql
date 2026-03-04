@@ -1,24 +1,29 @@
 type Todo {
-  # Example field (placeholder)
-  exampleField: Int
+  id: Int!
+  title: String!
+  description: String
+  completed: Boolean!
 }
 
 input CreateTodoInput {
-  # Example field (placeholder)
-  exampleField: Int
+  title: String!
+  description: String
 }
 
 input UpdateTodoInput {
   id: Int!
+  title: String
+  description: String
+  completed: Boolean
 }
 
 type Query {
-  todo: [Todo]!
-  todo(id: Int!): Todo
+  todos: [Todo!]!
+  todo(id: Int!): Todo!
 }
 
 type Mutation {
   createTodo(createTodoInput: CreateTodoInput!): Todo!
   updateTodo(updateTodoInput: UpdateTodoInput!): Todo!
-  removeTodo(id: Int!): Todo
+  removeTodo(id: Int!): Boolean!
 }

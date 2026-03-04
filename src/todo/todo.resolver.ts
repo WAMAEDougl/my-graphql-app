@@ -7,12 +7,7 @@ import { UpdateTodoInput } from './dto/update-todo.input';
 export class TodoResolver {
   constructor(private readonly todoService: TodoService) {}
 
-  @Mutation('createTodo')
-  create(@Args('createTodoInput') createTodoInput: CreateTodoInput) {
-    return this.todoService.create(createTodoInput);
-  }
-
-  @Query('todo')
+  @Query('todos')
   findAll() {
     return this.todoService.findAll();
   }
@@ -22,9 +17,14 @@ export class TodoResolver {
     return this.todoService.findOne(id);
   }
 
+  @Mutation('createTodo')
+  create(@Args('createTodoInput') input: CreateTodoInput) {
+    return this.todoService.create(input);
+  }
+
   @Mutation('updateTodo')
-  update(@Args('updateTodoInput') updateTodoInput: UpdateTodoInput) {
-    return this.todoService.update(updateTodoInput.id, updateTodoInput);
+  update(@Args('updateTodoInput') input: UpdateTodoInput) {
+    return this.todoService.update(input);
   }
 
   @Mutation('removeTodo')
